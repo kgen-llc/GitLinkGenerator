@@ -1,0 +1,35 @@
+name: Build and Test
+
+env:
+  CONFIGURATION: Release
+  
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install dependencies
+      run: dotnet restore
+      
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-restore
