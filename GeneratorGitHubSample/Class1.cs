@@ -1,8 +1,6 @@
 ﻿namespace GeneratorGitHubSample;
 
-using GitPathGenerator;
-
-[GitPath]
+[GitPathGenerator.GitPath]
 public partial class Class1
 {
 
