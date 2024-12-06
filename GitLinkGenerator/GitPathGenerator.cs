@@ -63,7 +63,7 @@ public class GitPathGenerator : IIncrementalGenerator
                         {{
                             public partial class {model.ClassName}
                             {{
-                                public const string GitPath = ""{filePath}"";
+                                public const string GitPath = @""{filePath}"";
                             }}
                         }}";
 
