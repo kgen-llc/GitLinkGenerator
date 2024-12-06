@@ -33,16 +33,47 @@ public class GitPathGenerator : IIncrementalGenerator
         var gitInfo = context.AnalyzerConfigOptionsProvider.
             Select ( extraGitInfo);
 
-        var classDeclarations = context.SyntaxProvider
-            .CreateSyntaxProvider(
-                predicate: static (s, _) => IsClassWithAttributes(s),
-                transform: static (ctx, _) => GetSemanticTargetForGeneration(ctx))
-            .Where(static m => m is not null);
+       var pipeline = context.SyntaxProvider.ForAttributeWithMetadataName(
+            fullyQualifiedMetadataName: "GitPathGenerator.GitPathAttribute",
+            predicate: static (syntaxNode, cancellationToken) => syntaxNode is ClassDeclarationSyntax,
+            transform: static (context, cancellationToken) =>
+            {
+                return new Model(
+                    // Note: this is a simplified example. You will also need to handle the case where the type is in a global namespace, nested, etc.
+                    Namespace: context.TargetSymbol.ContainingNamespace?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)),
+                    ClassName: context.TargetSymbol.Name,
+                    FilePath: context.TargetNode.SyntaxTree.FilePath);
+            }
+        );
 
-        var compilationAndClasses = context.CompilationProvider.Combine(classDeclarations.Collect());
+        context.RegisterSourceOutput(pipeline.Combine(gitInfo), static (context, args) =>
+        {
+            var gitInfo = args.Right;
+            var model = args.Left;
+                string? filePath = null;
 
-        context.RegisterSourceOutput(compilationAndClasses.Combine(gitInfo), static (spc, source) => Execute(source.Left.Left, source.Left.Right, source.Right, spc));
+                if(GitHubGenerator.IsGitHub(gitInfo.Value.projectUrl))
+                {
+                    filePath = GitHubGenerator.GitHubGeneratePath(model.FilePath, gitInfo.Value.projectUrl, gitInfo.Value.branch, gitInfo.Value.repository);
+                }
+
+                if(filePath != null) {
+                    var source = $@"
+                        namespace {model.Namespace}
+                        {{
+                            public partial class {model.ClassName}
+                            {{
+                                public const string GitPath = ""{filePath}"";
+                            }}
+                        }}";
+
+                context.AddSource($"{model.ClassName}_GitPath.cs", SourceText.From(source, Encoding.UTF8));
+                }
+        });
     }
+
+    private record Model(string? Namespace, string ClassName, string FilePath);
+
     private static (string repository, string branch, string projectUrl)? extraGitInfo(AnalyzerConfigOptionsProvider provider, CancellationToken token)
     {
         if(provider.GlobalOptions.TryGetValue("build_property.GitRootDirectory", out var repository)
@@ -53,57 +84,5 @@ public class GitPathGenerator : IIncrementalGenerator
         }
 
         return null;
-    }
-
-    private static bool IsClassWithAttributes(SyntaxNode node)
-    {
-        return node is ClassDeclarationSyntax classDeclarationSyntax && classDeclarationSyntax.AttributeLists.Count > 0;
-    }
-
-    private static ClassDeclarationSyntax GetSemanticTargetForGeneration(GeneratorSyntaxContext context)
-    {
-        var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
-        return classDeclarationSyntax;
-    }
-
-    private static void Execute(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> classes, (string repository,string branch, string projectUrl)? gitInfo, SourceProductionContext context)
-    {
-        if (classes.IsDefaultOrEmpty)
-            return;
-
-        var attributeSymbol = compilation.GetTypeByMetadataName("GitPathGenerator.GitPathAttribute");
-        if (attributeSymbol == null)
-            return;
-
-        foreach (var classDeclaration in classes)
-        {
-            var model = compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-            var classSymbol = model.GetDeclaredSymbol(classDeclaration);
-
-            var attributeData = classSymbol.GetAttributes().FirstOrDefault(ad => ad.AttributeClass.Equals(attributeSymbol, SymbolEqualityComparer.Default));
-            if (attributeData != null)
-            {
-                string? filePath = null;
-
-                if(GitHubGenerator.IsGitHub(gitInfo.Value.projectUrl))
-                {
-                    filePath = GitHubGenerator.GitHubGeneratePath(classDeclaration.SyntaxTree.FilePath, gitInfo.Value.projectUrl, gitInfo.Value.branch, gitInfo.Value.repository);
-                }
-                
-
-                if(filePath != null) {
-                    var source = $@"
-                        namespace {classSymbol.ContainingNamespace.ToDisplayString()}
-                        {{
-                            public partial class {classSymbol.Name}
-                            {{
-                                public const string GitPath = ""{filePath}"";
-                            }}
-                        }}";
-
-                context.AddSource($"{classSymbol.Name}_GitPath.cs", SourceText.From(source, Encoding.UTF8));
-                }
-            }
-        }
     }
 }
