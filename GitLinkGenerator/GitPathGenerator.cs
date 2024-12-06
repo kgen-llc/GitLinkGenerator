@@ -15,6 +15,20 @@ public class GitPathGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        context.RegisterPostInitializationOutput(static postInitializationContext => {
+            postInitializationContext.AddSource("GitPathGenerator.generated.cs", SourceText.From("""
+                using System;
+
+                namespace GitPathGenerator
+                {
+                    [AttributeUsage(AttributeTargets.Class)]
+                    internal sealed class GitPathAttribute : Attribute
+                    {
+                    }
+                }
+                """, Encoding.UTF8));
+        });
+
         // control logging via analyzerconfig
         var gitInfo = context.AnalyzerConfigOptionsProvider.
             Select ( extraGitInfo);
@@ -57,7 +71,7 @@ public class GitPathGenerator : IIncrementalGenerator
         if (classes.IsDefaultOrEmpty)
             return;
 
-        var attributeSymbol = compilation.GetTypeByMetadataName("GeneratorGitHubSample.GitPathAttribute");
+        var attributeSymbol = compilation.GetTypeByMetadataName("GitPathGenerator.GitPathAttribute");
         if (attributeSymbol == null)
             return;
 

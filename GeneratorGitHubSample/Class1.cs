@@ -1,7 +1,6 @@
 ﻿namespace GeneratorGitHubSample;
 
-[AttributeUsage(AttributeTargets.Class)]
-public class GitPathAttribute : Attribute {}
+using GitPathGenerator;
 
 [GitPath]
 public partial class Class1
