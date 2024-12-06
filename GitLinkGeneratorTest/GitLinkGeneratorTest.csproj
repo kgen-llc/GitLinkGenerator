@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../GeneratorGitHubSample/GeneratorGitHubSample.csproj" />
+    <ProjectReference Include="../GitLinkGenerator/GitLinkGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

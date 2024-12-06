@@ -1,0 +1,1 @@
+Generate a static field representing the hyperlink to the related github content.

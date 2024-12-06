@@ -69,17 +69,26 @@ public class GitPathGenerator : IIncrementalGenerator
             var attributeData = classSymbol.GetAttributes().FirstOrDefault(ad => ad.AttributeClass.Equals(attributeSymbol, SymbolEqualityComparer.Default));
             if (attributeData != null)
             {
-                var filePath = classDeclaration.SyntaxTree.FilePath.Substring(gitInfo.Value.repository.Length+1);
-                var source = $@"
-namespace {classSymbol.ContainingNamespace.ToDisplayString()}
-{{
-    public partial class {classSymbol.Name}
-    {{
-        public const string GitPath = ""{gitInfo.Value.projectUrl}/{gitInfo.Value.branch}/{filePath}"";
-    }}
-}}";
+                string? filePath = null;
+
+                if(GitHubGenerator.IsGitHub(gitInfo.Value.projectUrl))
+                {
+                    filePath = GitHubGenerator.GitHubGeneratePath(classDeclaration.SyntaxTree.FilePath, gitInfo.Value.projectUrl, gitInfo.Value.branch, gitInfo.Value.repository);
+                }
+                
+
+                if(filePath != null) {
+                    var source = $@"
+                        namespace {classSymbol.ContainingNamespace.ToDisplayString()}
+                        {{
+                            public partial class {classSymbol.Name}
+                            {{
+                                public const string GitPath = ""{filePath}"";
+                            }}
+                        }}";
 
                 context.AddSource($"{classSymbol.Name}_GitPath.cs", SourceText.From(source, Encoding.UTF8));
+                }
             }
         }
     }
