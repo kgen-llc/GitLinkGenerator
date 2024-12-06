@@ -10,6 +10,6 @@ public static class GitHubGenerator
         if(branch.StartsWith("refs/remotes/origin/")) {
             branch = branch.Substring("refs/remotes/origin/".Length);
         }
-        return  $"{projectUrl}/blob/{branch}/{filePath.Substring(repository.Length+1)}";
+        return  $"{projectUrl}/blob/{branch}/{filePath.Substring(repository.Length+1).Replace('\\','/')}";
     }
 }
