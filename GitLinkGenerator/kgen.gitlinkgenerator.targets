@@ -1,13 +1,13 @@
 <Project>
 
   <Target Name="GetGitBranch" BeforeTargets="BeforeBuild">
-    <Exec Command="git rev-parse --show-toplevel" ConsoleToMSBuild="true">
+    <Exec Command="git rev-parse --show-toplevel" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitRootDirectory"/>
     </Exec>
   </Target>
 
   <Target Name="GetGitRoot" BeforeTargets="BeforeBuild">
-    <Exec Command="git rev-parse --symbolic-full-name @{upstream}" ConsoleToMSBuild="true">
+    <Exec Command="git rev-parse --symbolic-full-name @{upstream}" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitBranch"/>
     </Exec>
   </Target>
