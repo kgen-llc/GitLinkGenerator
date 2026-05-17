@@ -73,6 +73,6 @@ jobs:
           Write-Host "Pushing NuGet package: $($file.FullName)"
           if ($env:GITHUB_REF -eq 'refs/heads/dev')
           {
-             dotnet nuget push artifacts/my-sdk.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+             dotnet nuget push "$($file.FullName)" --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
           }        
         }
