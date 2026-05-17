@@ -17,6 +17,10 @@
     <Copyright>Copyright 2024 KGEN LLC</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+
+    <!-- Prevents the DLL from being added to the 'lib' folder -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +30,12 @@
 
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
+
+    
+    <None Include="$(OutputPath)\$(AssemblyName).dll" 
+        Pack="true" 
+        PackagePath="analyzers/dotnet/cs" 
+        Visible="false" />
   </ItemGroup>
 
 </Project>

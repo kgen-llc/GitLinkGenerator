@@ -8,4 +8,9 @@
   </PropertyGroup>
 
   <Import Project="../GitLinkGenerator/kgen.GitLinkGenerator.targets" />
+  <!-- Note that this is not a "normal" ProjectReference.
+         It needs the additional 'OutputItemType' and 'ReferenceOutputAssmbly' attributes. -->
+    <ProjectReference Include="../GitLinkGenerator/GitLinkGenerator.csproj" 
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
 </Project>
