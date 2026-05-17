@@ -37,3 +37,6 @@ jobs:
     # Execute all unit tests in the solution
     - name: Execute unit tests
       run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-restore
+
+    - name: Run KGen Analyzers Repository
+      run: dotnet tool exec kgen.Analyzers.Repository
