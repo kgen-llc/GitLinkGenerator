@@ -39,4 +39,4 @@ jobs:
       run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-restore
 
     - name: Run KGen Analyzers Repository
-      run: dotnet tool exec kgen.Analyzers.Repository
+      run: dotnet tool exec --yes kgen.Analyzers.Repository
