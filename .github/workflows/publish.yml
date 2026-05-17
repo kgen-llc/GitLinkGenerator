@@ -49,6 +49,9 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
 
+    - name: Build 
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore ./GitLinkGenerator/GitLinkGenerator.csproj /p:Version=${{ needs.compute_package_version.outputs.package_version }}
+
     - name: Build package
       run: dotnet pack --configuration ${{ env.CONFIGURATION }} --no-restore ./GitLinkGenerator/GitLinkGenerator.csproj /p:Version=${{ needs.compute_package_version.outputs.package_version }} -o ./artifacts
 
