@@ -26,7 +26,7 @@
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\"/> 
     <None Include="../LICENSE" Pack="true" PackagePath=""/>
-    <None Include="kgen.GitLinkGenerator.targets" Pack="true" PackagePath="/build"/>
+    <None Include="kgen.gitlinkgenerator.targets" Pack="true" PackagePath="/build"/>
 
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />

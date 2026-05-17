@@ -7,7 +7,7 @@
     <PackageProjectUrl>https://github.com/kgen-llc/GitLinkGenerator</PackageProjectUrl>
   </PropertyGroup>
 
-  <Import Project="../GitLinkGenerator/kgen.GitLinkGenerator.targets" />
+  <Import Project="../GitLinkGenerator/kgen.Gitlinkgenerator.targets" />
 
   <ItemGroup>
     <!-- Note that this is not a "normal" ProjectReference.
