@@ -13,7 +13,7 @@
   </Target>
 
   <Target Name="CheckPackageProjectUrl" BeforeTargets="BeforeBuild">
-    <Error Text="PackageProjectUrl property is not set" Condition=" '$(CheckPackageProjectUrl)' == '' " />
+    <Error Text="PackageProjectUrl property is not set" Condition=" '$(PackageProjectUrl)' == '' " />
   </Target>
 
   <ItemGroup>
