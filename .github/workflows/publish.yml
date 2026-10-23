@@ -51,7 +51,7 @@ jobs:
         dotnet-version: 10.0.x
 
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore GitLinkGenerator.slnx
 
     - name: Build 
       run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore ./GitLinkGenerator/GitLinkGenerator.csproj /p:Version=${{ needs.compute_package_version.outputs.package_version }}
