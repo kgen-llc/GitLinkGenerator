@@ -23,7 +23,7 @@ In order to work, csproj MUST contains PackageProjectUrl property:
 
 ```xml
 <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageProjectUrl>https://github.com/kgen-llc/GitLinkGenerator</PackageProjectUrl>
