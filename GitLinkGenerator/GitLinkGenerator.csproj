@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/kgen-llc/GitLinkGenerator</PackageProjectUrl>
     <Title>Git Link Generator</Title>
     <Description>Generate a static field representing the hyperlink to the related github content.</Description>
-    <Copyright>Copyright 2024 KGEN LLC</Copyright>
+    <Copyright>Copyright 2026 KGEN LLC</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 

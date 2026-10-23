@@ -29,14 +29,14 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.0.x
 
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore GitLinkGenerator.slnx
       
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet test GitLinkGenerator.slnx --configuration ${{ env.CONFIGURATION }} --no-restore
 
     - name: Run KGen Analyzers Repository
       run: dotnet tool exec --yes kgen.Analyzers.Repository

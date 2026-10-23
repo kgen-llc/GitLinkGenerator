@@ -9,9 +9,13 @@
 
   <Target Name="GetGitRoot" BeforeTargets="BeforeBuild">
     <Message Text="Calculating Git root directory..." />
-    <Exec Command="git rev-parse --symbolic-full-name @{upstream}" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true">
+    <Exec Command="git rev-parse --symbolic-full-name @{upstream}" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true" Condition="'$(GITHUB_BASE_REF)' == '' and '$(GITHUB_REF_NAME)' == ''">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitBranch"/>
     </Exec>
+    <PropertyGroup>
+      <GitBranch Condition="'$(GitBranch)' == '' and '$(GITHUB_BASE_REF)' != ''">$(GITHUB_BASE_REF)</GitBranch>
+      <GitBranch Condition="'$(GitBranch)' == '' and '$(GITHUB_REF_NAME)' != ''">$(GITHUB_REF_NAME)</GitBranch>
+    </PropertyGroup>
   </Target>
 
   <Target Name="CheckPackageProjectUrl" BeforeTargets="BeforeBuild">
